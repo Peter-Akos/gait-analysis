@@ -18,3 +18,22 @@ class Patient(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+
+def video_directory_path(instance, filename):
+    # File will be uploaded to MEDIA_ROOT/patient_<id>/videos/<filename>
+    return f"patient_{instance.patient.id}/videos/{filename}"
+
+
+class Video(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='videos')
+    speed_left = models.DecimalField(max_digits=5, decimal_places=2)
+    speed_right = models.DecimalField(max_digits=5, decimal_places=2)
+    cadence_left = models.DecimalField(max_digits=5, decimal_places=2)
+    cadence_right = models.DecimalField(max_digits=5, decimal_places=2)
+    knee_flexion_left = models.DecimalField(max_digits=5, decimal_places=2)
+    knee_flexion_right = models.DecimalField(max_digits=5, decimal_places=2)
+    video_file = models.FileField(upload_to=video_directory_path)
+
+    def __str__(self):
+        return f"Video for {self.patient}"

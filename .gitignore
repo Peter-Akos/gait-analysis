@@ -159,3 +159,22 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+openpose/
+.DS_Store
+backend/data/processed/video_csvs/
+backend/data/processed/all_processed_video_segments_doublesided.pickle
+backend/data/processed/all_videos_dict.pickle
+backend/data
+/backend/wandb
+backend/demo/s41597-023-02767-y.pdf
+backend/model/Legacy Code.ipynb
+backend/model/video_id_predicted_values.csv
+backend/model/video_process_utils.py
+backend/model/y.csv
+backend/model/video_process_utils.py
+frontend/uploaded_file
+/backend/mmcv
+backend/LSTM_10_0.07150546323721575.pth
+backend/model/features.csv
+backend/model/original_500.csv
+/backend/models
