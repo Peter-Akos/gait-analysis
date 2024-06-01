@@ -1,34 +1,13 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
-import requests
 import pandas as pd
-from datetime import datetime
 import numpy as np
 import altair as alt
 
-# Backend API URL
-BASE_URL = "http://localhost:8000/api"
+from pages import add_patient, view_patients, update_patient_view, upload_video_view
 
 
 # Helper functions to interact with the API
-def get_items():
-    response = requests.get(f"{BASE_URL}/patients/")
-    return response.json() if response.status_code == 200 else []
-
-
-def create_item(data):
-    response = requests.post(f"{BASE_URL}/patients/", json=data)
-    return response.status_code == 201
-
-
-def update_item(item_id, data):
-    response = requests.put(f"{BASE_URL}/patients/update/{item_id}/", json=data)
-    return response.status_code == 200
-
-
-def delete_item(item_id):
-    response = requests.delete(f"{BASE_URL}/patients/{item_id}/delete/")
-    return response.status_code == 200
 
 
 # Sample data function
@@ -49,6 +28,7 @@ def get_predicted_features():
     }
 
 
+st.set_page_config(layout="wide")
 # Streamlit app
 st.title("Patient Management System")
 
@@ -56,117 +36,24 @@ st.title("Patient Management System")
 with st.sidebar:
     selected = option_menu(
         "Menu",
-        ["Add Patient", "View Patients", "Update Patient", "Delete Patient", "Visualize Results"],
-        icons=["plus", "list", "pencil", "trash", "graph-up"],
+        ["Home", "Add Patient", "View Patients", "Visualize Results", "Upload Video"],
+        icons=["house", "plus", "list", "graph-up", "upload"],
         menu_icon="cast",
         default_index=0,
     )
 
 # Add Patient page
 if selected == "Add Patient":
-    st.header("Add a New Patient")
-    first_name = st.text_input("First Name")
-    last_name = st.text_input("Last Name")
-    date_of_birth = st.date_input("Date of Birth", min_value=datetime(1900, 1, 1))
-    gender = st.selectbox("Gender", ["M", "F"])
-    address = st.text_area("Address")
-    phone_number = st.text_input("Phone Number")
-    email = st.text_input("Email")
+    add_patient()
 
-    if st.button("Add Patient"):
-        if all([first_name, last_name, date_of_birth, gender, address, phone_number, email]):
-            data = {
-                "first_name": first_name,
-                "last_name": last_name,
-                "date_of_birth": date_of_birth.isoformat(),
-                "gender": gender,
-                "address": address,
-                "phone_number": phone_number,
-                "email": email
-            }
-            if create_item(data):
-                st.success("Patient added successfully!")
-            else:
-                st.error("Failed to add patient")
-        else:
-            st.error("All fields are required")
 
 # View Patients page
 elif selected == "View Patients":
-    st.header("Patient List")
-    patients = get_items()
-
-    if patients:
-        df = pd.DataFrame(patients)
-        df = df.set_index('id')
-
-        for index, row in df.iterrows():
-            st.write(f"### Patient ID: {index}")
-            st.write(f"**First Name:** {row['first_name']}")
-            st.write(f"**Last Name:** {row['last_name']}")
-            st.write(f"**Date of Birth:** {row['date_of_birth']}")
-            st.write(f"**Gender:** {row['gender']}")
-            st.write(f"**Address:** {row['address']}")
-            st.write(f"**Phone Number:** {row['phone_number']}")
-            st.write(f"**Email:** {row['email']}")
-
-            with st.form(key=f"delete_form_{index}"):
-                delete_button = st.form_submit_button(label="Delete")
-                if delete_button:
-                    if delete_item(index):
-                        st.success(f"Patient {index} deleted successfully!")
-                        st.experimental_rerun()
-                    else:
-                        st.error(f"Failed to delete patient {index}")
-            st.write("---")
-    else:
-        st.write("No patients found.")
+    view_patients()
 
 # Update Patient page
 elif selected == "Update Patient":
-    st.header("Update Patient Details")
-    patient_id_to_update = st.number_input("Enter the ID of the patient to update", min_value=1, step=1)
-    new_first_name = st.text_input("New First Name")
-    new_last_name = st.text_input("New Last Name")
-    new_date_of_birth = st.date_input("New Date of Birth", min_value=datetime(1900, 1, 1))
-    new_gender = st.selectbox("New Gender", ["M", "F"])
-    new_address = st.text_area("New Address")
-    new_phone_number = st.text_input("New Phone Number")
-    new_email = st.text_input("New Email")
-
-    if st.button("Update Patient"):
-        if patient_id_to_update and all(
-                [new_first_name, new_last_name, new_date_of_birth, new_gender, new_address, new_phone_number,
-                 new_email]):
-            data = {
-                "first_name": new_first_name,
-                "last_name": new_last_name,
-                "date_of_birth": new_date_of_birth.isoformat(),
-                "gender": new_gender,
-                "address": new_address,
-                "phone_number": new_phone_number,
-                "email": new_email
-            }
-            if update_item(patient_id_to_update, data):
-                st.success("Patient updated successfully!")
-            else:
-                st.error("Failed to update patient")
-        else:
-            st.error("ID and all new details are required")
-
-# Delete Patient page
-elif selected == "Delete Patient":
-    st.header("Delete a Patient")
-    patient_id_to_delete = st.number_input("Enter the ID of the patient to delete", min_value=1, step=1)
-
-    if st.button("Delete Patient"):
-        if patient_id_to_delete:
-            if delete_item(patient_id_to_delete):
-                st.success("Patient deleted successfully!")
-            else:
-                st.error("Failed to delete patient")
-        else:
-            st.error("ID is required")
+    update_patient_view()
 
 # Visualize Results page
 # Visualize Results page
@@ -223,3 +110,6 @@ elif selected == "Visualize Results":
         st.altair_chart(chart, use_container_width=True)
     else:
         st.write("No predicted features data available.")
+
+elif selected == 'Upload Video':
+    upload_video_view()
