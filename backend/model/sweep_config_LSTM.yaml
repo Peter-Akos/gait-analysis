@@ -1,0 +1,19 @@
+program: train.py
+method: bayes
+metric:
+  goal: minimize
+  name: best_validation_loss
+parameters:
+  dropout_prob:
+    min: 0.0
+    max: 0.5
+  hidden_size:
+    min: 32
+    max: 256
+  learning_rate:
+    min: 0.0001
+    max: 0.05
+  nr_epochs:
+    value: 30
+  model_architecture:
+    value: LSTM
