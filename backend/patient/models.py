@@ -21,19 +21,19 @@ class Patient(models.Model):
 
 
 def video_directory_path(instance, filename):
-    # File will be uploaded to MEDIA_ROOT/patient_<id>/videos/<filename>
-    return f"patient_{instance.patient.id}/videos/{filename}"
+    return f"patients_data/patient_{instance.patient.id}/videos/{filename}"
 
 
 class Video(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='videos')
-    speed_left = models.DecimalField(max_digits=5, decimal_places=2)
-    speed_right = models.DecimalField(max_digits=5, decimal_places=2)
-    cadence_left = models.DecimalField(max_digits=5, decimal_places=2)
-    cadence_right = models.DecimalField(max_digits=5, decimal_places=2)
-    knee_flexion_left = models.DecimalField(max_digits=5, decimal_places=2)
-    knee_flexion_right = models.DecimalField(max_digits=5, decimal_places=2)
+    speed_left = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    speed_right = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    cadence_left = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    cadence_right = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     video_file = models.FileField(upload_to=video_directory_path)
+    processed = models.BooleanField(default=False)
+    coordinates = models.JSONField(blank=True, null=True)
+    date_created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Video for {self.patient}"
+        return f"Video {self.video_file.name} for {self.patient}"

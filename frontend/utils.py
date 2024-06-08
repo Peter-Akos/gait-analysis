@@ -1,9 +1,11 @@
+import uuid
 from io import BytesIO
 
 import cv2
 import numpy as np
 
 from backend_requests import update_patient
+import moviepy.editor as mp
 
 
 def save_changed_data(new_df, old_df):
@@ -27,30 +29,12 @@ def save_changed_data(new_df, old_df):
     return True
 
 
-def resize_video(video_bytes, width, height):
-    # video_array = np.frombuffer(video_bytes, dtype=np.uint8)
-    # # video_array = np.load('data.npy')  # load
-    # print(video_array.shape)
-    # video = cv2.imdecode(video_array, 0)
-    # print(video)
-    #
-    video = cv2.VideoCapture("sample_video.mp4")
-
-    # Check if video was read successfully
-    if video is None:
-        raise ValueError("Unable to decode the video.")
-
-    # Resize the video
-    resized_video = cv2.resize(video, (width, height))
-
-    # Encode resized video to bytes
-    _, encoded_image = cv2.imencode('.mp4', resized_video)
-    if not _:
-        raise ValueError("Unable to encode the resized video.")
-
-    resized_video_bytes = encoded_image.tobytes()
-
-    return resized_video_bytes
+def resize_video(width, height):
+    clip = mp.VideoFileClip("input_video.mp4")
+    clip_resized = clip.resize(newsize=(width, height))
+    filename = f"{uuid.uuid4()}.mp4"
+    clip_resized.write_videofile(filename)
+    return filename
 
 
 if __name__ == '__main__':
