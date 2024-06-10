@@ -113,12 +113,13 @@ def update_patient_view():
 
 
 def upload_video_view():
-    st.title("Video Upload App")
+    st.title("Select the Patient and upload a Video")
 
     patient_id = st.text_input("Patient ID")
     uploaded_file = st.file_uploader("Choose a video...", type=["mp4", "mov", "avi", "mkv"])
-    with open("uploaded_file.mp4", 'wb') as f:
-        f.write(uploaded_file.getvalue())
+    if uploaded_file:
+        with open("uploaded_file.mp4", 'wb') as f:
+            f.write(uploaded_file.getvalue())
     print(uploaded_file)
 
     if uploaded_file is not None:

@@ -30,7 +30,7 @@ def get_predicted_features():
 
 st.set_page_config(layout="wide")
 # Streamlit app
-st.title("Patient Management System")
+# st.title("Patient Management System")
 
 # Sidebar menu
 with st.sidebar:

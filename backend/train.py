@@ -12,10 +12,10 @@ from model.models import GaitAnalysisModel, CNN
 X_FILENAME = "data/X_100.pkl"
 SPLIT_PATH = "data/split.pkl"
 Y_FILENAME = "data/y.csv"
-PREDICTED_VALUE = "cadence"
+PREDICTED_VALUE = "speed"
 BATCH_SIZE = 8
 NR_EPOCHS = 10
-OPTIMIZER = "RMSprop"
+OPTIMIZER = "Adam"
 LEARNING_RATE = 0.001
 
 MODEL_ARCHITECTURE = "CNN"
