@@ -65,7 +65,7 @@ def process_json_results(patient_id, filename):
 
     model_input = torch.tensor(scaled_X, dtype=torch.float32).unsqueeze(0)
     cadence_path = "models/CNN_30_0.05048786286430754.pth"
-    speed_path = "models/CNN_30_0.05048786286430754.pth"
+    speed_path = "models/CNN_30_0.07537441999669288.pth"
 
     cadence_model = load_CNN_model(cadence_path)
     speed_model = load_CNN_model(speed_path)
@@ -86,6 +86,9 @@ def process_json_results(patient_id, filename):
     video.coordinates = features_json
     video.processed = True
     video.save()
+
+    print(output_speed)
+    print(output_cadence)
 
     print(f"Finished processing video {filename} for patient {patient_id}")
 
@@ -113,7 +116,7 @@ def read_json_results(patient_id, filename):
     return result
 
 
-def load_CNN_model(path="models/CNN_30_0.05048786286430754.pth"):
+def load_CNN_model(path):
     state_dict = torch.load(path)
     # print(state_dict)
     # print(state_dict.keys())
@@ -123,5 +126,4 @@ def load_CNN_model(path="models/CNN_30_0.05048786286430754.pth"):
     model.load_state_dict(state_dict)
     return model
 
-
-# process_json_results(3, "063fe25d-f911-4c54-a5b7-5bb7fdd2eeac")
+process_json_results(3, "063fe25d-f911-4c54-a5b7-5bb7fdd2eeac")
