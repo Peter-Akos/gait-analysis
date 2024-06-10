@@ -178,3 +178,4 @@ backend/LSTM_10_0.07150546323721575.pth
 backend/model/features.csv
 backend/model/original_500.csv
 /backend/models
+/backend/example
